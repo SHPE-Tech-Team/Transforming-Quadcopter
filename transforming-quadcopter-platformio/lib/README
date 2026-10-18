@@ -1,4 +1,14 @@
 
+Goal: a vehicle that drives on the ground from a hardcoded script. No radio.
+Everything runs on a laptop first. The "hardware layer" only prints for now.
+
+Run all tests:        pio test -e native
+Run one suite:        pio test -e native -f test_mixer
+Run the program:      pio run -e native   then   .pio/build/native/program
+
+
+
+
 This directory is intended for project specific (private) libraries.
 PlatformIO will compile them to static libraries and link into the executable file.
 
