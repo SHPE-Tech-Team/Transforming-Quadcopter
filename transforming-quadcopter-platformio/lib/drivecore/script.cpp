@@ -4,19 +4,17 @@
 // EDIT THIS TABLE to change what the vehicle does.
 // Each row is: how long (ms), drive, steer, mode.
 static const Step DEFAULT_SCRIPT[] = {
-    // { , , , MODE_DRIVING },   // forward
-    // { , , , MODE_DRIVING },   // turn in place (slowly, steer gain is small)
-    // { , , , MODE_DRIVING },   // forward
-    // { , , , MODE_DRIVING }    // stop
+    {3000, 0.6f, 0.0f, MODE_DRIVING}, // forward
+    {1500, 0.0f, 1.0f, MODE_DRIVING}, // turn in place (slowly, steer gain is small)
+    {3000, 0.6f, 0.0f, MODE_DRIVING}, // forward
+    {1000, 0.0f, 0.0f, MODE_DRIVING}  // stop
 };
 static const int DEFAULT_COUNT = sizeof(DEFAULT_SCRIPT) / sizeof(DEFAULT_SCRIPT[0]);
 
 Command script_get_from(const Step *steps, int count, uint32_t t_ms)
 {
     Command result;
-    result.drive = 0.0f;
-    result.steer = 0.0f;
-    result.mode = MODE_LANDED;
+    // set the drive, steer, and mode for result to the default values
 
     // Right after boot: stay still in landed mode.
     if (t_ms < cfg::START_DELAY_MS)
