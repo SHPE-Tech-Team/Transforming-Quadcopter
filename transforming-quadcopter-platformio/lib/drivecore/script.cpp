@@ -11,11 +11,12 @@ static const Step DEFAULT_SCRIPT[] = {
 };
 static const int DEFAULT_COUNT = sizeof(DEFAULT_SCRIPT) / sizeof(DEFAULT_SCRIPT[0]);
 
-Command script_get_from(const Step *steps, int count, uint32_t t_ms)
-{
+Command script_get_from(const Step *steps, int count, uint32_t t_ms) {
     Command result;
     // set the drive, steer, and mode for result to the default values
-
+    result.drive = 0;
+    result.steer = 0;
+    result.mode = MODE_LANDED;
     // Right after boot: stay still in landed mode.
     if (t_ms < cfg::START_DELAY_MS)
     {
@@ -24,12 +25,19 @@ Command script_get_from(const Step *steps, int count, uint32_t t_ms)
 
     uint32_t time_into_script = t_ms - cfg::START_DELAY_MS;
     int i;
-    for (i = 0; i < count; i++)
-    {
+    for (i = 0; i < count; i++) {
         //     - If time_into_script is less than steps[i].duration_ms, we are in this step:
         //         copy drive, steer and mode from steps[i] into result, then return result
+        if (time_into_script < steps[i].duration_ms) {
+            result.drive = steps[i].drive;
+            result.steer = steps[i].steer;
+            result.mode = steps[i].mode;
+            return result;
+        }
+        
         //     - Otherwise this step is over: subtract steps[i].duration_ms from
         //         time intoo script and go on to the next step
+        time_into_script -= steps[i].duration_ms;
     }
 
     // Script is finished: stay still, and if count is more than 0 stay in the last step's mode.
@@ -48,10 +56,11 @@ bool script_done(uint32_t t_ms)
     int i;
     for (i = 0; i < DEFAULT_COUNT; i++)
     {
+        total += DEFAULT_SCRIPT[i].duration_ms;
         // total =
         // update the total using the properties of DEFAULT_SCRIPT at i
     }
-
+    if (t_ms >= total) return true;
     return false; // should return when t_ms is bigger or equal
 }
 
@@ -61,11 +70,12 @@ static float previous_steer = 0.0f;
 
 void filter_reset()
 {
+    previous_drive = 0.0f;
+    previous_steer = 0.0f;
     // reset the settings for drive & steer to 0
 }
 
-Command filter_command(Command raw)
-{
+Command filter_command(Command raw) {
     float b = cfg::CMD_FILTER_B;
     Command result;
     result.drive = (1.0f - b) * previous_drive + b * raw.drive;
