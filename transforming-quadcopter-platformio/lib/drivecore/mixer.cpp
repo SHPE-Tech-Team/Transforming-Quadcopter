@@ -9,7 +9,7 @@ MotorCmd mix_ground(Command cmd)
     float drive = clamp_value(cmd.drive, -1.0f, 1.0f);
     float steer = clamp_value(cmd.steer, -1.0f, 1.0f);
 
-    // steering speeds up one wheel and slows the other using the same value away from drive
+    // steering right speeds up the left wheel and slows the right using the same value away from drive
     float steer_part = steer * cfg::STEER_GAIN;
     float right = drive + steer_part;
     float left = drive - steer_part;
@@ -26,17 +26,18 @@ MotorCmd mix_ground(Command cmd)
         left = 0.0f;
     }
 
-
     right = clamp_value(right, -1.0f, 1.0f) * cfg::SPEED_LIMIT;
     left = clamp_value(left, -1.0f, 1.0f) * cfg::SPEED_LIMIT;
 
     // flip either wheel that spins the wrong way
-     if (cfg::INVERT_RIGHT) {
+    if (cfg::INVERT_RIGHT)
+    {
         right = -right;
-     }
-     if (cfg::INVERT_LEFT) {
+    }
+    if (cfg::INVERT_LEFT)
+    {
         left = -left;
-     }
+    }
 
     MotorCmd result;
     result.left = left;
