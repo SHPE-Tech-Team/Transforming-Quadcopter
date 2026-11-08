@@ -44,7 +44,9 @@ Command script_get_from(const Step *steps, int count, uint32_t t_ms)
     }
 
     // Script is finished: stay still, and if count is more than 0 stay in the last step's mode.
-
+    if (count > 0) {
+        result.mode = steps[count - 1].mode;
+    }
     return result;
 }
 
