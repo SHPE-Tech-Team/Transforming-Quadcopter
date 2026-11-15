@@ -11,8 +11,8 @@ MotorCmd mix_ground(Command cmd)
 
     // steering right speeds up the left wheel and slows the right using the same value away from drive
     float steer_part = steer * cfg::STEER_GAIN;
-    float right = drive + steer_part;
-    float left = drive - steer_part;
+    float right = drive - steer_part;
+    float left = drive + steer_part;
 
     // tiny commands (use abs value) to either become zero so the motors do not hum or creep
     // use the DEADBAND defined in cfg
