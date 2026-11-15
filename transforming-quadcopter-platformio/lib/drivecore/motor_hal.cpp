@@ -172,10 +172,10 @@ void hal_set_logging(bool logging)
 void hal_set_ground_motor(int side, float command)
 {
     // use clamp_value(command, -1.0f, 1.0f) to limit the command and then convert to pulse w/ helper func
-    inline float lim = clamp_value(command, -1.0f, 1.0f);
+    float lim = clamp_value(command, -1.0f, 1.0f);
     float pulse = command_to_pulse_us(lim);
     // set the pulse_left_us or pulse_right_us element for current_state based on the side
-    
+
     // if () {
 
     // } else {
@@ -186,8 +186,10 @@ void hal_set_ground_motor(int side, float command)
 void hal_set_servo(int servo_number, int angle_deg)
 {
     // do data validation of servo data by making sure angles are set to max if over and set to min if under
-    if (angle_deg > 360) angle_deg = 360;
-    if (angle_deg < 0) angle_deg = 0;
+    if (angle_deg > 360)
+        angle_deg = 360;
+    if (angle_deg < 0)
+        angle_deg = 0;
     // save validated data into either current_state.servo1_deg
     // if ()
     // {
